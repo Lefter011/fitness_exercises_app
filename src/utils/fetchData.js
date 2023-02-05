@@ -1,3 +1,5 @@
+import Loader from "../components/Loader";
+
 export const exerciseOptions = {
   method: 'GET',
     headers: {
@@ -16,8 +18,10 @@ export const youtubeOptions = {
 };
 
 export const fetchData = async (url, option) => {
-    const response = await fetch(url, option);
-    const data = await response.json();
-
+  let data;
+  const response = await fetch(url, option);
+  if (response.ok === true) {
+    data = await response.json();
     return data;
+  } return data = [];
 }
