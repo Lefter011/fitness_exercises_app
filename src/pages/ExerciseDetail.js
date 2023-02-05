@@ -7,12 +7,15 @@ import Detail from '../components/Detail'
 import ExerciseVideos from '../components/ExerciseVideos'
 import SimilarExercises from '../components/SimilarExercises'
 
+import Loader from "../components/Loader";
+
 const ExerciseDetail = () => {
   const [exerciseDetail, setexErciseDetail] = useState({});
   const [exetciseVideos, setExetciseVideos] = useState({});
   const [targetMuscleExercises, setTargetMuscleExercises] = useState([]);
   const [equipmentExercises, setEquipmentExercises] = useState([]);
   const { id } = useParams();
+  const [loaded, setLoaded] = useState(true);
 
   useEffect(() => {
     const fetchExercisesData = async () => {
@@ -32,18 +35,30 @@ const ExerciseDetail = () => {
       setEquipmentExercises(equipmentExercisesData);
     }
     fetchExercisesData();
+
+    window.scrollTo(0, -250);
   }, [id])
 
-  if (!exerciseDetail) return <div>No Data</div>
+    useEffect(() => {
+    let timer = setTimeout(() => setLoaded(false), 4000);
+    return () => {
+      setLoaded(true);
+      clearTimeout(timer);
+    };
+  }, [id]);
 
   return (
-    <Box sx={{ mt: { lg: '96px', xs: '60px' } }} alignItems='center' alignContent='center' >
-      <Detail exerciseDetail={exerciseDetail} />
-      <ExerciseVideos exerciseVideos={exetciseVideos} name={exerciseDetail.name} />
-      <SimilarExercises targetMuscleExercises={targetMuscleExercises} 
-        equipmentExercises={equipmentExercises}
-      />
-    </Box>
+    <div>
+      {loaded ? (<Loader/>):(
+        <Box sx={{ mt: { lg: '96px', xs: '60px' } }} alignItems='center' alignContent='center' >
+            <Detail exerciseDetail={exerciseDetail} />
+            <ExerciseVideos exerciseVideos={exetciseVideos} name={exerciseDetail.name} />
+            <SimilarExercises targetMuscleExercises={targetMuscleExercises} 
+              equipmentExercises={equipmentExercises}
+            />
+          </Box>
+        )}
+    </div>
   )
 }
 
